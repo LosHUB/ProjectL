@@ -1,0 +1,1342 @@
+
+
+repeat wait() until game:IsLoaded()
+ 
+local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(3)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+
+getgenv().AutoSaveSettings = {
+    Mode = "",
+    Teleport = false,
+    Attack = false,
+    Click = false,
+    Collects = false,
+    FarmQuests = false,
+    AutoTeleportRaid  = false,
+    AutoTeleportRaidRumbling = false,
+    AutoFarmRaidNamek = false,
+    AutoFarmRaidRumbling = false,
+    AutoOpenEgg = false,
+    Yen = false,
+    Dmg = false,
+    Luck = false,
+    Curseds = false,
+    Shinys = false,
+    Secrets = false,
+    SuperLucks = false,
+}
+
+local HttpService = game:GetService("HttpService")
+local FileName = "AutoSaveFeatures-AUS1" .. game.Players.LocalPlayer.Name..".txt"
+
+if isfile(FileName) then
+    getgenv().AutoSaveSettings = HttpService:JSONDecode(readfile(FileName))
+end
+
+local function SaveSettings()
+    local JSON = HttpService:JSONEncode(getgenv().AutoSaveSettings)
+
+    writefile(FileName, JSON)
+end
+
+
+local thumbsDownEmoji = utf8.char(0x1F44E)
+local noEntryEmoji = utf8.char(0x1F6AB)
+local farmerEmoji = utf8.char(0x1F468, 0x200D, 0x1F33D)
+local repeatEmoji = utf8.char(0x1F501)
+local signalStrengthEmoji = utf8.char(0x1F4F6)
+local doorEmoji = utf8.char(0x1F6AA)
+local repeatSingleEmoji = utf8.char(0x1F502)
+local clockwiseVerticalArrowsEmoji = utf8.char(0x1F503) 
+local timerClockEmoji = utf8.char(0x23F2)
+local axeEmoji = utf8.char(0x1FA93)
+local crossedSwordsEmoji = utf8.char(0x2694)
+local rocketEmoji = utf8.char(0x1F680)
+local computerMouseEmoji = utf8.char(0x1F5B1)
+local moneyBagEmoji = utf8.char(0x1F4B0)
+
+local bossDummy = game:GetService("Workspace").Arenas["Nomek Arena"]["Nomek Arena"].BossDummy:FindFirstChild("BOSS_DUMMY")
+
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Player = game:GetService("Players").LocalPlayer or game:GetService("Players").PlayerAdded:Wait()
+local VCurrentVersion
+
+
+
+local SuggestionsWebhookUnsplit = "https://discordapp.com/api/webhooks/1088377340263944262/3j4NSuPTxdvdEf3VPpgvDYWdrV_y6-4C_Jc5SA3tGQ3Gcra0QfgKl4NghQzdhWkQ1srV"
+
+
+local SuggestionsWebhookParts = SuggestionsWebhookUnsplit:split("{")
+
+
+local SuggestionsWebhook = (SuggestionsWebhookParts[1] or "") .. (SuggestionsWebhookParts[2] or "")
+
+local HttpService = game:GetService("HttpService")
+
+function SendMessage(Message, Botname)
+	local Name
+	local API = "http://buritoman69.glitch.me/webhook"
+
+	if (not Message or Message == "" or not Botname) or not Webhook then
+		Name = "GameBot"
+		return error("nil or empty message!")
+	else
+		Name = Botname
+	end
+
+	local Body = {
+		['Key'] = tostring("applesaregood"),
+		['Message'] = tostring(Message),
+		['Name'] = Name,
+		['Webhook'] = Webhook  
+	}
+
+	Body = HttpService:JSONEncode(Body)
+	local Data = game:HttpPost(API, Body, false, "application/json")
+
+	return Data or nil;
+end
+
+local function Notify(Message, Duration)
+	Rayfield:Notify({
+		Title = thumbsDownEmoji .. " L-HUB " .. thumbsDownEmoji,
+		Content = Message,
+		Duration = Duration,
+		Image = 4483362458,
+		Actions = {},
+	})
+end
+
+local animons = {}
+local InventoryNest = game:GetService("Players").LocalPlayer.PlayerGui.InventoryUI.MainFrame.Outline.InnerFrame.InventoryScroll.InventoryNest
+
+for _, frame in pairs(InventoryNest:GetChildren()) do
+    if frame:IsA("Frame") then
+        local HeroName = frame:FindFirstChild("HeroName", true)
+        if HeroName and HeroName:IsA("TextLabel") then
+             table.insert(animons,HeroName.Text)
+        end 
+    end 
+end 
+
+
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Loco-CTO/UI-Library/main/VisionLibV2/source.lua'))()
+
+local Window = Library:Create({
+	Name = thumbsDownEmoji .. " L-HUB REWRITE " .. thumbsDownEmoji, -- String
+	Footer = ".L.#5123 x Leous#2495", -- String
+	ToggleKey = Enum.KeyCode.RightShift, -- Enum.KeyCode
+	LoadedCallback = function()
+		-- Function
+	end,
+
+	KeySystem = false, -- Boolean
+	Key = "keyabc123", -- String
+	MaxAttempts = 5, -- Integer
+	DiscordLink = "", -- String (Set it to nil if you do not have one, the button will not pop out)
+	ToggledRelativeYOffset = nil -- Number (Y Offset from bottom of your screen. Set it to nil if you want it to be centred)
+})
+
+
+
+ local Modes = {"Kill Aura"}
+ 
+ for i,v in pairs(workspace.Maps:GetChildren()) do
+     for i,v in pairs(v.Enemies:GetChildren()) do
+         if not table.find(Modes, v.Name) then
+             table.insert(Modes, v.Name)
+         end
+     end
+ end
+ 
+
+ 
+ local workspace = workspace
+ local huge = math.huge
+ local Remotes = game:GetService("ReplicatedStorage").Remotes
+ 
+ local HumanoidRootPart = Player.Character:WaitForChild("HumanoidRootPart")
+ 
+ local ChildAdded = false
+ 
+
+ local Tab = Window:Tab({
+	Name = "Main", -- String
+	Icon = "rbxassetid://13173891515", -- String
+	Color = Color3.new(1, 0, 0) -- Color3
+})
+
+local Main = Tab:Section({
+	Name = "Farming Functions:" -- String
+})
+
+local Dropdown = Main:Dropdown({
+	Name = axeEmoji .. " Select Enemies:", -- String
+	Items = Modes, -- Table
+	Callback = function(Option)
+        getgenv().AutoSaveSettings.Mode = Option
+	end
+})
+
+
+local autotpmob = Main:Toggle({
+	Name =  rocketEmoji .. " Teleport To Enemies", -- String
+	Default =  getgenv().AutoSaveSettings.Teleport, -- Boolean
+	Callback = function(bool)
+        getgenv().AutoSaveSettings.Teleport = bool
+        while task.wait() do 
+           if  getgenv().AutoSaveSettings.Teleport == true then 
+              local Remotes = game:GetService("ReplicatedStorage").Remotes
+    local Player = game:GetService("Players").LocalPlayer or game:GetService("Players").PlayerAdded:Wait()
+    local HumanoidRootPart = Player.Character:WaitForChild("HumanoidRootPart")
+     local Number = math.huge
+                local Closest
+                
+                for i,v in pairs(workspace.Maps:GetChildren()) do
+                    for i,v in pairs(v.Enemies:GetChildren()) do
+                        if  getgenv().AutoSaveSettings.Mode == "Kill Aura" or v.Name ==  getgenv().AutoSaveSettings.Mode   and v:FindFirstChild("Torso") and v.Torso.Transparency == 0  then
+                            local Magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:FindFirstChildOfClass("Part").Position).Magnitude
+                            if Magnitude < Number then
+                                Number = Magnitude
+                                Closest = v
+                            end
+                        end	
+                    end
+                end
+    
+                if Closest then
+                  HumanoidRootPart.CFrame = Closest:FindFirstChildOfClass("Part").CFrame * CFrame.new(0, 0, 5)
+                end 
+      else
+          wait()
+          break
+      end 
+  end 
+	end
+})
+
+local autoattackmob = Main:Toggle({
+	Name =  crossedSwordsEmoji .. " Auto Attack", -- String
+	Default = getgenv().AutoSaveSettings.Attack, -- Boolean
+	Callback = function(bool)
+                getgenv().AutoSaveSettings.Attack  = bool
+                while task.wait() do
+                    if    getgenv().AutoSaveSettings.Attack == true   then
+                       local workspace = workspace
+           local Remotes = game:GetService("ReplicatedStorage").Remotes
+           local Player = game:GetService("Players").LocalPlayer or game:GetService("Players").PlayerAdded:Wait()
+           local HumanoidRootPart = Player.Character:WaitForChild("HumanoidRootPart")
+            local Number = math.huge
+                       local Closest
+                       
+                       for i,v in pairs(workspace.Maps:GetChildren()) do
+                           for i,v in pairs(v.Enemies:GetChildren()) do
+
+                               if getgenv().AutoSaveSettings.Mode == "Kill Aura" or v.Name == getgenv().AutoSaveSettings.Mode and v:FindFirstChild("Torso") and v.Torso.Transparency == 0 then
+                                   local Magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:FindFirstChildOfClass("Part").Position).Magnitude
+                                   if Magnitude < Number then
+                                       Number = Magnitude
+                                       Closest = v
+                                   end
+                               end	
+                           end
+                       end
+           
+                       if Closest then
+                       for i,v in pairs(game:GetService("Workspace").HeroFolder:GetChildren()) do 
+                              if v:IsA("Model") and v:FindFirstChild("Owner") and v:FindFirstChild("Enemy")  then 
+                       if v.Enemy.Value == nil  then  
+                          Remotes.EnemyRemotes.AttackEnemy:FireServer(Closest)
+                              end 
+                          end
+                        end 
+                    end 
+                       else
+                         wait()
+                         break
+                         end
+                       end
+
+	end
+})
+
+
+
+    local Toggle = Main:Toggle({
+        Name = computerMouseEmoji .. " Auto Click", -- String
+        Default =  getgenv().AutoSaveSettings.Click, -- Boolean
+        Callback = function(bool)
+        getgenv().AutoSaveSettings.Click = bool 
+         while task.wait() do 
+             if  getgenv().AutoSaveSettings.Click == true then 
+                Remotes.EnemyRemotes.AttackClick:InvokeServer()
+             else
+                wait()
+                break
+             end 
+            end 
+    end,
+})
+
+
+local character = game.Players.LocalPlayer.Character
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+local dropsFolder = game:GetService("Workspace").Drops 
+
+local Toggle = Main:Toggle({
+    Name = moneyBagEmoji .. " Auto Collect", -- String
+    Default =  getgenv().AutoSaveSettings.Collects, -- Boolean
+    Callback = function(bool)
+        getgenv().AutoSaveSettings.Collects = bool 
+        while task.wait() do 
+            if getgenv().AutoSaveSettings.Collects == true then 
+                local tweenService = game:GetService("TweenService")
+            local closestCoin = nil
+            local closestDistance = math.huge
+            for _, coin in pairs(dropsFolder:GetChildren()) do
+                if coin.Name == "DropModel" and coin:FindFirstChild("Coin") then
+                    local distance = (coin.Coin.Position - rootPart.Position).magnitude
+                    if distance < closestDistance then
+                        closestDistance = distance
+                        closestCoin = coin.Coin
+                    end
+                end
+            end
+
+            if closestCoin then
+                local targetCFrame = CFrame.new(rootPart.Position, closestCoin.Position) * CFrame.new(0, 0, -5)
+                local tweenInfo = TweenInfo.new((rootPart.Position - targetCFrame.p).Magnitude / 16, Enum.EasingStyle.Linear)
+                local tween = tweenService:Create(rootPart, tweenInfo, {CFrame = targetCFrame})
+                tween:Play()
+                tween.Completed:Wait()
+            else
+                wait(1)
+            end
+else
+    wait()
+    break
+end 
+end 
+
+    end,
+})
+
+local Toggle = Main:Toggle({
+    Name = farmerEmoji .. " Auto Quest Farm", -- String
+    Default =  getgenv().AutoSaveSettings.FarmQuests , -- Boolean
+    Callback = function(bool)
+        getgenv().AutoSaveSettings.FarmQuests = bool 
+        while task.wait() do 
+            if   getgenv().AutoSaveSettings.FarmQuests == true then 
+                local function findTaskDescText()
+                    local text = ""
+                    while text == "" do
+                        local objectiveList = game:GetService("Players").LocalPlayer.PlayerGui.HUD.QuestFrame.ObjectiveList
+                        local taskDescs = {}
+                        for _, textLabel in pairs(objectiveList:GetChildren()) do
+                            if textLabel:IsA("TextLabel") then
+                                for _, descendant in pairs(textLabel:GetDescendants()) do
+                                    if descendant.Name == "TaskDesc" and descendant:IsA("TextLabel") then
+                                        table.insert(taskDescs, descendant)
+                                    end
+                                end
+                            end
+                        end
+                
+                        for _, taskDesc in pairs(taskDescs) do
+                            local current, max = taskDesc.Text:match("%[(%d+)/(%d+)%]")
+                            current = tonumber(current)
+                            max = tonumber(max)
+                            if current and max and current < max then
+                                text = taskDesc.Text
+                                break
+                            end
+                        end
+                
+                        if text == "" then wait(1) end
+                    end
+                
+                    return text
+                end
+                
+                local text = findTaskDescText()
+                print("Text found:", text)
+                
+                local current, max = text:match("%[(%d+)/(%d+)%]")
+                current = tonumber(current)
+                max = tonumber(max)
+                
+                if current and max and current < max then
+                    local mobName = text:gsub("%s*%[[^%]]+%]%s*", "")
+                    local mobNameLower = mobName:lower()
+                    local mobNameFormatted = mobName:gsub("(%a)([%w_']*)", function(first, rest) return first:upper()..rest:lower() end)
+                
+                    local mapsFolder = game:GetService("Workspace").Maps
+                    local player = game.Players.LocalPlayer.Character
+                    local HumanoidRootPart = player.HumanoidRootPart
+                
+                    for _, map in pairs(mapsFolder:GetChildren()) do
+                        local enemiesFolder = map:FindFirstChild("Enemies")
+                        if enemiesFolder then
+                            for _, enemy in pairs(enemiesFolder:GetChildren()) do
+                                if enemy.Name:lower() == mobNameLower then
+                                    local primaryPart = enemy:FindFirstChildOfClass("Part")
+                                    if primaryPart then
+                                        HumanoidRootPart.CFrame = primaryPart.CFrame * CFrame.new(0, 0, 3)
+                
+                                        -- Attack the enemy using the provided code
+                                        local args = {
+                                            [1] = workspace.Maps[map.Name].Enemies[mobNameFormatted]
+                                        }
+                
+                                        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EnemyRemotes"):WaitForChild("AttackEnemy"):FireServer(unpack(args))
+                                    end
+                                    break
+                                end
+                            end
+                        end
+                    end
+                wait(1)
+            end
+        else
+            wait()
+            break
+        end
+    end
+    end,
+})
+
+
+    local Toggle = Main:Toggle({
+        Name = " Auto Freeze ( Avoid Got Fling Around Map )", -- String
+        Default = false, -- Boolean
+        Callback = function(state)
+            if state then 
+         game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true 
+             else
+  game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false 
+             end 
+    end,
+})
+
+
+
+    local Tab = Window:Tab({
+        Name = "Raids", -- String
+        Icon = "rbxassetid://13173953350", -- String
+        Color = Color3.new(1, 0, 0) -- Color3
+    })
+
+ 
+    local Section = Tab:Section({
+        Name = "Namek Raids AutoFarm:" -- String
+    })
+
+    local SetLabels = Section:Label({
+        Name = "Current Position To Set: None", -- String
+    })
+
+    local Button = Section:Button({
+        Name = "Set Your Position After Done Areas", -- String
+        Callback = function()
+        getgenv().AutoSaveSettings.SavedPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+           Title = "Position Alert", -- Required
+           Text = "Successfully Set Your Current Position.", -- Required
+        })
+        print("Current Set Position: " ..  tostring(getgenv().AutoSaveSettings.SavedPosition))
+        SetLabels:SetName("Current Set Position: " .. game:GetService("Players").LocalPlayer.extrastats.Location.Value) -- String
+    end,
+ })
+
+
+ local Toggle = Section:Toggle({
+	Name = "Auto Teleport If Detected Namek Raids", -- String
+	Default =  getgenv().AutoSaveSettings.AutoTeleportRaid , -- Boolean
+	Callback = function(bool)
+        getgenv().AutoSaveSettings.AutoTeleportRaid = bool
+        while task.wait() do 
+           if   getgenv().AutoSaveSettings.AutoTeleportRaid == true then 
+        local textLabel = game:GetService("Workspace").Lobbies["Arena Plaza"]["Arena Plaza"].ArenaTeleporters["Nomek Arena"].TimerPart.ArenaOpenTimer.TextLabel
+        local Teleporter = game:GetService("Workspace").Lobbies["Arena Plaza"]["Arena Plaza"].ArenaTeleporters["Nomek Arena"].Teleporter
+        
+        if string.find(textLabel.Text, "JOIN NOW!") then
+   if getgenv().AutoSaveSettings.Attack == true and getgenv().AutoSaveSettings.Teleport  == true then 
+            autotpmob:Set(false) -- Boolean
+            autoattackmob:Set(false) -- Boolean
+        end 
+        
+            wait(2)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Teleporter.CFrame
+            wait(3)
+
+            local args = {
+                [1] = "Nomek Arena"
+            }
+            
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("JoinArena"):InvokeServer(unpack(args))
+            
+            
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("GetArenaName"):InvokeServer()
+            
+            
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("LocationRemotes"):WaitForChild("RespawnRequest"):InvokeServer()
+            wait(100)
+        end 
+    else
+        wait()
+        break
+    end 
+end 
+    end,
+})
+
+
+
+local Toggle = Section:Toggle({
+	Name = "AutoFarm Namek Raids", -- String
+	Default =  getgenv().AutoSaveSettings.AutoFarmRaidNamek, -- Boolean
+	Callback = function(bool)
+
+  
+        getgenv().AutoSaveSettings.AutoFarmRaidNamek  = bool 
+ while task.wait() do 
+    if   getgenv().AutoSaveSettings.AutoFarmRaidNamek  == true then 
+        pcall(function()
+     local character = game.Players.LocalPlayer.Character
+     local rootPart = character:FindFirstChildOfClass("Part")
+     local closestEnemy
+     local closestDistance = math.huge
+     local enemyName
+     local bossDummy = game:GetService("Workspace").Arenas["Nomek Arena"]["Nomek Arena"].BossDummy:FindFirstChild("BOSS_DUMMY")
+
+     for _, zone in pairs(game:GetService("Workspace").Arenas["Nomek Arena"]["Nomek Arena"].Zones:GetChildren()) do
+         if zone:FindFirstChild("Enemies") then
+             for _, enemy in pairs(zone.Enemies:GetChildren()) do
+                 local distance = (rootPart.Position - enemy:WaitForChild("HumanoidRootPart").Position).magnitude
+                 if distance < closestDistance then
+                     closestDistance = distance
+                     closestEnemy = enemy
+                     enemyName = enemy.Name
+                 end
+             end
+         end
+     end
+         
+     if closestEnemy and not game:GetService("Workspace").Arenas["Nomek Arena"]["Nomek Arena"].BossDummy:FindFirstChild("BOSS_DUMMY") then -- find closest enemies 
+         rootPart.CFrame = closestEnemy:FindFirstChildOfClass("Part").CFrame * CFrame.new(0, 0, 3)
+         local args = { [1] = closestEnemy }
+         game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EnemyRemotes"):WaitForChild("AttackEnemy"):FireServer(unpack(args))
+     elseif not  game:GetService("Workspace").Arenas["Nomek Arena"]["Nomek Arena"].BossDummy:FindFirstChild("BOSS_DUMMY") then
+       
+        wait(3)
+        else
+         rootPart.CFrame = bossDummy:GetModelCFrame()
+             task.wait(.5)
+             local args = { [1] = bossDummy }
+             game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EnemyRemotes"):WaitForChild("AttackEnemy"):FireServer(unpack(args))
+         end
+     
+         --  \\ Back To Saved Pos // -- 
+  if game:GetService("Players").LocalPlayer.PlayerGui.ArenaUI.VictoryRewards.Visible == true or
+   game:GetService("Players").LocalPlayer.PlayerGui.ArenaUI.FailureRewards.Visible == true and getgenv().AutoSaveSettings.SavedPosition ~= nil then 
+     task.wait(.5)
+     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = getgenv().AutoSaveSettings.SavedPosition
+     if getgenv().AutoSaveSettings.Attack == false and getgenv().AutoSaveSettings.Teleport == false then 
+     autotpmob:Set(true) -- Boolean
+            autoattackmob:Set(true) -- Boolean
+  end 
+end
+     task.wait(math.huge)
+     end)
+    else
+     wait()
+     break
+ end 
+    end 
+        end,
+    })
+
+
+    local Section = Tab:Section({
+        Name = "Rumbling Raids AutoFarm:" -- String
+    })
+
+
+    local Toggle = Section:Toggle({
+        Name = "Auto Teleport If Detected Rumbling Raids", -- String
+        Default =  getgenv().AutoSaveSettings.AutoTeleportRaidRumbling , -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.AutoTeleportRaidRumbling = bool
+            while task.wait() do 
+               if   getgenv().AutoSaveSettings.AutoTeleportRaidRumbling == true then 
+                local textLabel = game:GetService("Workspace").Lobbies["Arena Plaza"]["Arena Plaza"].ArenaTeleporters["Rumbling Arena"].TimerPart.ArenaOpenTimer.TextLabel
+                local Teleporter = game:GetService("Workspace").Lobbies["Arena Plaza"]["Arena Plaza"].ArenaTeleporters["Rumbling Arena"].Teleporter
+                
+                if string.find(textLabel.Text, "JOIN NOW!") then
+       if getgenv().AutoSaveSettings.Attack == true and getgenv().AutoSaveSettings.Teleport  == true then 
+                autotpmob:Set(false) -- Boolean
+                autoattackmob:Set(false) -- Boolean
+            end 
+            
+                wait(2)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Teleporter.CFrame
+                wait(3)
+    
+                local args = {
+                    [1] = "Rumbling Arena"
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("JoinArena"):InvokeServer(unpack(args))
+                
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("GetArenaName"):InvokeServer()
+                
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("LocationRemotes"):WaitForChild("RespawnRequest"):InvokeServer()
+                wait(100)
+            end 
+        else
+            wait()
+            break
+        end 
+    end 
+        end,
+    })
+
+    local Toggle = Section:Toggle({
+        Name = "AutoFarm Rumbling Raids", -- String
+        Default =  getgenv().AutoSaveSettings.AutoFarmRaidRumbling, -- Boolean
+        Callback = function(bool)
+    
+      
+            getgenv().AutoSaveSettings.AutoFarmRaidRumbling  = bool 
+     while task.wait() do 
+        if   getgenv().AutoSaveSettings.AutoFarmRaidRumbling  == true then 
+            pcall(function()
+         local character = game.Players.LocalPlayer.Character
+         local rootPart = character:FindFirstChildOfClass("Part")
+         local closestEnemy
+         local closestDistance = math.huge
+         local enemyName
+         local bossDummy = game:GetService("Workspace").Arenas["Rumbling Arena"]["Shigu Arena"].BossDummy:FindFirstChild("BOSS_DUMMY")
+    
+         for _, zone in pairs(game:GetService("Workspace").Arenas["Rumbling Arena"]["Shigu Arena"].Zones:GetChildren()) do
+             if zone:FindFirstChild("Enemies") then
+                 for _, enemy in pairs(zone.Enemies:GetChildren()) do
+                     local distance = (rootPart.Position - enemy:WaitForChild("HumanoidRootPart").Position).magnitude
+                     if distance < closestDistance then
+                         closestDistance = distance
+                         closestEnemy = enemy
+                         enemyName = enemy.Name
+                     end
+                 end
+             end
+         end
+             
+         if closestEnemy and not game:GetService("Workspace").Arenas["Rumbling Arena"]["Shigu Arena"].BossDummy:FindFirstChild("BOSS_DUMMY") then -- find closest enemies 
+             rootPart.CFrame = closestEnemy:FindFirstChildOfClass("Part").CFrame * CFrame.new(0, 0, 3)
+             local args = { [1] = closestEnemy }
+             game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EnemyRemotes"):WaitForChild("AttackEnemy"):FireServer(unpack(args))
+         elseif not  game:GetService("Workspace").Arenas["Rumbling Arena"]["Shigu Arena"].BossDummy:FindFirstChild("BOSS_DUMMY") then
+           
+            wait(3)
+            else
+             rootPart.CFrame = bossDummy:GetModelCFrame()
+                 task.wait(.5)
+                 local args = { [1] = bossDummy }
+                 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("EnemyRemotes"):WaitForChild("AttackEnemy"):FireServer(unpack(args))
+             end
+         
+             --  \\ Back To Saved Pos // -- 
+      if game:GetService("Players").LocalPlayer.PlayerGui.ArenaUI.VictoryRewards.Visible == true or
+       game:GetService("Players").LocalPlayer.PlayerGui.ArenaUI.FailureRewards.Visible == true and getgenv().AutoSaveSettings.SavedPosition ~= nil then 
+         task.wait(.5)
+         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = getgenv().AutoSaveSettings.SavedPosition
+         if getgenv().AutoSaveSettings.Attack == false and getgenv().AutoSaveSettings.Teleport == false then 
+         autotpmob:Set(true) -- Boolean
+                autoattackmob:Set(true) -- Boolean
+      end 
+    end
+         task.wait(math.huge)
+         end)
+        else
+         wait()
+         break
+     end 
+        end 
+            end,
+        })
+    
+    local Section = Tab:Section({
+        Name = "Items In Raid Shop:" -- String
+    })
+
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Yen", -- String
+        Default = getgenv().AutoSaveSettings.Yen, -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.Yen = bool
+            while task.wait() do 
+                if  getgenv().AutoSaveSettings.Yen  == true then 
+                    local args = {
+                        [1] = "Yen"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))
+                    
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+    
+
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Damages", -- String
+        Default = getgenv().AutoSaveSettings.Dmg, -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.Dmg = bool
+            while task.wait() do 
+                if  getgenv().AutoSaveSettings.Dmg == true then 
+                    local args = {
+                        [1] = "Damage"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))
+                    
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Luck", -- String
+        Default =    getgenv().AutoSaveSettings.Luck , -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.Luck = bool
+            while task.wait() do 
+                if    getgenv().AutoSaveSettings.Luck == true then 
+                    local args = {
+                        [1] = "Luck"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))            
+        
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+    
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Cursed Note", -- String
+        Default = getgenv().AutoSaveSettings.Curseds , -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.Curseds = bool
+            while task.wait() do 
+                if getgenv().AutoSaveSettings.Curseds  == true then 
+                    local args = {
+                        [1] = "CursedNotes"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))
+                    
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+    
+
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Super Luck", -- String
+        Default = getgenv().AutoSaveSettings.SuperLucks , -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.SuperLucks = bool
+            while task.wait() do 
+                if  getgenv().AutoSaveSettings.SuperLucks  == true then 
+                    local args = {
+                        [1] = "SuperLuck"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))
+                    
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Shiny Potion", -- String
+        Default =  getgenv().AutoSaveSettings.Shinys , -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.Shinys = bool
+            while task.wait() do 
+                if getgenv().AutoSaveSettings.Shinys == true then 
+
+                    local args = {
+                        [1] = "Shiny"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))            
+        
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+    
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Buy Secret Pity Potion", -- String
+        Default =  getgenv().AutoSaveSettings.Secrets, -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.Secrets = bool
+            while task.wait() do 
+                if  getgenv().AutoSaveSettings.Secrets == true then 
+                    local args = {
+                        [1] = "SecretPity"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ArenaRemotes"):WaitForChild("PurchaseArenaItem"):InvokeServer(unpack(args))   
+                else
+                    wait()
+                     break
+               end 
+           end 
+        end,
+    })
+    
+    
+    local Tab = Window:Tab({
+        Name = "Open + Fuse", -- String
+        Icon = "rbxassetid://13173906640", -- String
+        Color = Color3.new(1, 0, 0) -- Color3
+    })
+
+    local Section = Tab:Section({
+        Name = "You have to be in the world where you want to open" -- String
+    })
+     
+
+    
+    
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Open Eggs", -- String
+        Default =  getgenv().AutoSaveSettings.AutoOpenEgg , -- Boolean
+        Callback = function(bool)
+         getgenv().AutoSaveSettings.AutoOpenEgg = bool
+         while task.wait() do 
+             if  getgenv().AutoSaveSettings.AutoOpenEgg == true then 
+                local Remotes = game.ReplicatedStorage.Remotes
+                Remotes.InventoryRemotes.HeroRoll:InvokeServer()
+                else
+                     wait()
+                      break
+                end 
+            end 
+        end,
+    })
+    
+    
+    local Section = Tab:Section({
+        Name = "Fuse Animons Settings:" -- String
+    })
+
+
+    local FuseLabel = Section:Label({
+        Name = "Current Animons ID To Fuse: None", -- String
+    })
+
+     
+
+    local AnimonsFears = Section:Dropdown({
+        Name = "Select Animons To Auto Fuse:", -- String
+        Items = animons, -- Table
+        Callback = function(item)
+            _G.ID = item
+            if item then 
+                local InventoryNest = game:GetService("Players").LocalPlayer.PlayerGui.InventoryUI.MainFrame.Outline.InnerFrame.InventoryScroll.InventoryNest
+    
+                for _, frame in pairs(InventoryNest:GetChildren()) do
+                    if frame:IsA("Frame") then
+                        local HeroName = frame:FindFirstChild("HeroName", true)
+                        if HeroName and HeroName:IsA("TextLabel") and HeroName.Text == _G.ID then
+                            local intValue = frame:FindFirstChildOfClass("IntValue")
+                            if intValue then
+                                FuseLabel:SetName("Current Animons ID To Fuse: " .. intValue.Value) -- String
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    })
+    
+    local Button = Section:Button({
+        Name = "Refresh Animons List", -- String
+        Callback = function()
+         
+            local animons = {}
+            local InventoryNest = game:GetService("Players").LocalPlayer.PlayerGui.InventoryUI.MainFrame.Outline.InnerFrame.InventoryScroll.InventoryNest
+            
+            for _, frame in pairs(InventoryNest:GetChildren()) do
+                if frame:IsA("Frame") then
+                    local HeroName = frame:FindFirstChild("HeroName", true)
+                    if HeroName and HeroName:IsA("TextLabel") then
+                         table.insert(animons,HeroName.Text)
+                    end 
+                end 
+            end 
+    
+            AnimonsFears:UpdateList({
+                Items = animons, -- Table
+                Replace = true -- Boolean (Clear all items in the dropdown)
+            })
+        end
+    })
+
+    local Slider = Section:Slider({
+        Name = "select your Animon ID:", -- String
+        Max = 100, -- Integer
+        Min = 0, -- Integer
+        Default = 1, -- Integer
+        Callback = function(Value)
+            _G.Fuse = Value
+          end
+    })
+    
+    local Toggle = Section:Toggle({
+        Name = "Auto Fuse Every 10 Seconds", -- String
+        Default =  false, -- Boolean
+        Callback = function(bool)
+            getgenv().AutoSaveSettings.AutoFuse = bool 
+            while task.wait(10) do 
+               if    getgenv().AutoSaveSettings.AutoFuse == true then 
+                  for i = 1, 100 do
+                      local args = {
+                      [1] = _G.Fuse,
+                      [2] = {
+                          [1] = i
+                      }
+                  }
+      
+                  game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("InventoryRemotes"):WaitForChild("FuseHeroes"):FireServer(unpack(args))
+      
+              end
+               else
+                  wait()
+                  break
+               end 
+              end 
+            end
+        })
+
+        local Tab = Window:Tab({
+            Name = "Webhooks", -- String
+            Icon = "rbxassetid://165100785", -- String
+            Color = Color3.new(1, 0, 0) -- Color3
+        })
+    
+        local Section = Tab:Section({
+            Name = "Enter Your Webhooks First Before Enable Anythings Else!" -- String
+        })
+    
+    
+        
+        local BigTextbox = Section:BigTextbox({
+            Name = "Webhook Url:", -- String
+            Default = "", -- String
+            PlaceHolderText = "Url Webhook", -- String
+            ResetOnFocus = true, -- Bool
+            Callback = function(Value)
+                _G.Web = Value
+            end
+        })
+        
+        local Slider = Section:Slider({
+            Name = "Time To Send (Seconds):", -- String
+            Max = 900, -- Integer
+            Min = 0, -- Integer
+            Default = 50, -- Integer
+            Callback = function(Value)
+                _G.SliderValue = Value
+            end
+        })
+        
+        
+        
+        local Toggle = Section:Toggle({
+            Name = "Auto Send Player Inventory Every Selected Time", -- String
+            Default = false, -- Boolean
+            Callback = function(Value)
+                _G.teste = Value
+           while     task.wait(_G.SliderValue) do 
+                if _G.teste == true then
+        
+        
+                    local webhookUrl = _G.Web
+                    local player = game.Players.LocalPlayer
+                    local yenText = game:GetService("CoreGui").PlayerList.PlayerListMaster.OffsetFrame.PlayerScrollList.SizeOffsetFrame.ScrollingFrameContainer.ScrollingFrameClippingFrame.ScollingFrame.OffsetUndoFrame["p_" .. player.UserId].ChildrenFrame["GameStat_Yen"].OverlayFrame.StatText.Text
+                    local statsScroll = player.PlayerGui.UpgradesUI.MainFrame.BlueOutline.MainFrame.StatsScroll
+                    local itemsScroll = player.PlayerGui.ItemsUI.MainFrame.OrangeOutline.MainFrame.Scroll
+                    
+                    local totalEarnedText = statsScroll["Yen Earned"].ValueText.Text
+                    local playtimeText = statsScroll.Playtime.ValueText.Text
+                    local robuxSpentText = statsScroll["Robux Spent"].ValueText.Text
+                    local damageDealtText = statsScroll["Damage Dealt"].ValueText.Text
+                    local highestDPSText = statsScroll["Highest DPS"].ValueText.Text
+                    local bestTeamDmgText = statsScroll["Best Team Dmg"].ValueText.Text
+                    local crystalsOpenedText = statsScroll["Crystals Opened"].ValueText.Text
+                    
+                    local superLuckyBoostText
+                    if pcall(function() return itemsScroll.SuperLuck.Frame.Button.Quantity.Text end) then
+                        superLuckyBoostText = itemsScroll.SuperLuck.Frame.Button.Quantity.Text
+                    else
+                        superLuckyBoostText = 0
+                    end
+                    
+                    local luckBoostText
+                    if pcall(function() return itemsScroll.Luck.Frame.Button.Quantity.Text end) then
+                        luckBoostText = itemsScroll.Luck.Frame.Button.Quantity.Text
+                    else
+                        luckBoostText = 0
+                    end
+                    
+                    local yenBoostText
+                    if pcall(function() return itemsScroll.Yen.Frame.Button.Quantity.Text end) then
+                        yenBoostText = itemsScroll.Yen.Frame.Button.Quantity.Text
+                    else
+                        yenBoostText = 0
+                    end
+                    
+                    local shinyBoostText
+                    if pcall(function() return itemsScroll.Shiny.Frame.Button.Quantity.Text end) then
+                        shinyBoostText = itemsScroll.Shiny.Frame.Button.Quantity.Text
+                    else
+                        shinyBoostText = 0
+                    end
+                    
+                    local damageBoostText
+                    if pcall(function() return itemsScroll.Damage.Frame.Button.Quantity.Text end) then
+                        damageBoostText = itemsScroll.Damage.Frame.Button.Quantity.Text
+                    else
+                        damageBoostText = 0
+                    end
+                    local gemsText = player.extrastats.ArenaGems.Value
+                    
+                    local locationText = player.extrastats.Location.Value
+                    
+                    local data = {
+                       content = "",
+                       embeds = {{
+                           title = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+        
+                           description = "",
+                           type = "rich",
+                           color = tonumber(0x7269da),
+                           fields = {
+                               {name = "👁️ Username:", value = "||" .. player.Name .. "||", inline = false},
+                               {name = "🔔 Stats:", value =
+                                   "💴 Current Yen: " .. yenText ..
+                                   "\n💰 Total Earned: " .. totalEarnedText ..
+                                   "\n⏳ Total Playtime: " .. playtimeText ..
+                                   "\n💳 Robux Spent: " .. robuxSpentText ..
+                                   "\n⚔️ Damage Dealt: " .. damageDealtText ..
+                                   "\n📈 Highest DPS: " .. highestDPSText ..
+                                   "\n🥇 Best Team Dmg: " .. bestTeamDmgText ..
+                                   "\n💠 Crystals Opened: " .. crystalsOpenedText ..
+                                   "\n🌐 Location: " .. locationText,
+                                   inline = false},
+                               {name = "👜 Inventory", value =
+                                   "🍀 SuperLucky Boost: " .. superLuckyBoostText ..
+                                   "\n☘️ Luck Boost: " .. luckBoostText ..
+                                   "\n💹  Yen Boost: " .. yenBoostText ..
+                                   "\n⛩️ Shiny Boost: " .. shinyBoostText ..
+                                   "\n🗡️Damage Boost: " .. damageBoostText ..
+                                   "\n💎Gems: " .. gemsText,
+                                   inline = false}
+                           }
+                       }}
+                    }
+                    
+                    local jsonData = game:GetService("HttpService"):JSONEncode(data)
+                    local headers = {["content-type"] = "application/json"}
+                    
+                    request = http_request or request or HttpPost or syn.request
+                    request({Url = webhookUrl, Body = jsonData, Method = "POST", Headers = headers})
+     wait()
+                else
+ wait()
+ break
+                end 
+                end
+            end,
+        })
+        
+           
+        local Button = Section:Button({
+            Name = "Auto Notify If Got Mythics/Secrets In Animons Inventory", -- String
+            Callback = function()
+                Library:Notify({
+                    Name = "Auto Notify Alert", -- String
+                    Text = "Enabled Successfuly, ONLY PRESS THIS ONE TIME!", -- String
+                    Icon = "rbxassetid://11401835376", -- String
+                    Sound = "rbxassetid://6647898215", -- String
+                    Duration = 10, -- Integer
+                    Callback = function()
+                        -- Function
+                    end
+                })
+
+                local url = _G.Web
+                local player = game.Players.LocalPlayer
+                local folder = game:GetService("Players").LocalPlayer.PlayerGui.InventoryUI.MainFrame.Outline.InnerFrame.InventoryScroll.InventoryNest
+                local heroesFolder = game:GetService("ReplicatedStorage").Heroes
+                
+                folder.ChildAdded:Connect(function(child)
+                    local heroNameLabel = child:FindFirstChild("HeroName", true)
+                    if heroNameLabel and heroNameLabel:IsA("TextLabel") then
+                        local heroNameText = heroNameLabel.Text:gsub('<font color = "rgb%(255,225,0%)">★</font>', '')
+                   print(heroNameText)
+                        local heroFolder = heroesFolder:FindFirstChild(heroNameText, true)
+                        if heroFolder then
+                            local rarityValue = heroFolder:FindFirstChild("Rarity")
+                            if rarityValue and rarityValue:IsA("StringValue") and rarityValue.Value == "Secret"  or rarityValue.Value == "Mythic" then  
+                                print(rarityValue.Value)
+                                local data = {
+                                    ["content"] = "@everyone",
+                                    ["embeds"] = {
+                                        {
+                                            ["title"] = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+                                            ["description"] = "Username: ||" .. game.Players.LocalPlayer.Name.."|| Just Hatched **".. heroNameText .."** With Rarity: **" .. rarityValue.Value .. "**",
+                                            ["type"] = "rich",
+                                            ["color"] = tonumber(0x7269da),
+                                        }
+                                    }
+                                 }
+                                 local newdata = game:GetService("HttpService"):JSONEncode(data)
+                                 
+                                 local headers = {
+                                    ["content-type"] = "application/json"
+                                 }
+                                 request = http_request or request or HttpPost or syn.request
+                                 local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+                                 request(abcdef)
+                                 
+                            else
+                                print("not SECRET/MYTHIC")
+                            end
+                        end
+                    end
+                end)
+            end
+        })
+
+        local Label = Section:Label({
+            Name = "if notify you when u have auto sell mythic then it's SHINY MYTHIC one \nSame with SECRET rarity", -- String
+        })
+
+    local Tab = Window:Tab({
+        Name = "Misc", -- String
+        Icon = "rbxassetid://13174056924", -- String
+        Color = Color3.new(1, 0, 0) -- Color3
+    })
+
+    local Section = Tab:Section({
+        Name = "Some Gamepass Are Visuals Only!" -- String
+    })
+
+    
+
+
+    local Button = Section:Button({
+        Name = "Unlock All Gamepass", -- String
+        Callback = function()
+        local player = game.Players.LocalPlayer
+                local gamepasses = player.Gamepasses
+                if gamepasses then
+                    if gamepasses:FindFirstChild("Lucky") then
+                        gamepasses.Lucky.Value = true
+                    end
+                    if gamepasses:FindFirstChild("Ultra Lucky") then
+                        gamepasses["Ultra Lucky"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("Teleport") then
+                        gamepasses.Teleport.Value = true
+                    end
+                    if gamepasses:FindFirstChild("+2 Crystal Open") then
+                        gamepasses["+2 Crystal Open"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("2x Fuse") then
+                        gamepasses["2x Fuse"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("Autoclicker") then
+                        gamepasses.Autoclicker.Value = true
+                    end
+                    if gamepasses:FindFirstChild("VIP") then
+                        gamepasses.VIP.Value = true
+                    end
+                    if gamepasses:FindFirstChild("+2 Animon Equipped") then
+                        gamepasses["+2 Animon Equipped"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("More Storage") then
+                        gamepasses["More Storage"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("2x Yen") then
+                        gamepasses["2x Yen"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("Super Lucky") then
+                        gamepasses["Super Lucky"].Value = true
+                    end
+                    if gamepasses:FindFirstChild("Fast Open") then
+                        gamepasses["Fast Open"].Value = true
+                    end 
+                    if gamepasses:FindFirstChild("Shiny Hunter") then 
+                        gamepasses["Shiny Hunter"].Value = true 
+                end           
+            end        
+    end,
+
+})
+
+local Button = Section:Button({
+	Name = "Anti AFK v2", -- String
+	Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/AltsegoD/scripts/egoD/AntiAFKTimer.lua"))()
+    end,
+ })
+
+ local Toggle = Section:Toggle({
+	Name = "Auto Buy Areas", -- String
+	Default = false, -- Boolean
+	Callback = function(bool)
+        getgenv().Areass = bool 
+        while task.wait() do 
+            if Areass == true then 
+                for i,v in pairs(workspace.Maps:GetChildren()) do
+                    Remotes.LocationRemotes.LocationPurchase:InvokeServer(v.Name)
+                end
+    
+            else
+               wait()
+               break
+            end 
+           end 
+    end,
+})
+
+
+
+
+
+local Toggle = Section:Toggle({
+	Name = "Auto Claim Upgrades", -- String
+	Default = false, -- Boolean
+	Callback = function(bool)
+        getgenv().Upgrades = bool 
+        while task.wait() do 
+            if Upgrades == true then 
+                for i,v in pairs(Player.PlayerGui.UpgradesUI.MainFrame.BlueOutline.MainFrame.UpgradesScroll:GetChildren()) do
+                    if v.ClassName == "Frame" then
+                        Remotes.UpgradesRemotes.ClaimUpgrade:InvokeServer(v.Name.." "..v.Frame.Button.UpgradeName.Text:split(" ")[2])
+                    end
+                end
+            else
+               wait()
+               break
+            end 
+           end 
+    end,
+})
+
+
+
+
+local Toggle = Section:Toggle({
+	Name = "Auto Claim Quests", -- String
+	Default = false, -- Boolean
+	Callback = function(bool)
+        getgenv().Quests = bool 
+        while task.wait() do 
+            if Quests == true then 
+                for i,v in pairs(workspace.Maps:GetChildren()) do
+                    Remotes.QuestRemotes.RequestQuest:FireServer(v.Name)
+                    Remotes.QuestRemotes.ClaimQuestReward:InvokeServer(v.Name)
+                end
+    
+            else
+               wait()
+               break
+            end 
+           end 
+    end,
+})
+
+
+
+local Toggle = Section:Toggle({
+	Name = "Auto Equip Bests", -- String
+	Default = false, -- Boolean
+	Callback = function(bool)
+     getgenv().EquipBest = bool 
+     while task.wait() do 
+         if EquipBest == true then 
+            Remotes.HeroRemotes.EquipBest:FireServer()
+
+         else
+            wait()
+            break
+         end 
+        end 
+    end,
+})
+
+
+
+local Toggle = Section:Toggle({
+	Name = "Auto Requip Every 120 Seconds", -- String
+	Default = false, -- Boolean
+	Callback = function(bool)
+        getgenv().RequipPet = bool 
+        while task.wait(120) do 
+             if RequipPet == true then 
+                 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("HeroRemotes"):WaitForChild("UnequipAll"):FireServer()
+        task.wait(.5)
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("HeroRemotes"):WaitForChild("EquipBest"):FireServer()
+        else
+            wait()
+            break
+            end end
+    end,
+})
+spawn(function()
+    while task.wait(1) do -- Saving it around every 1 second is good
+        SaveSettings()
+    end
+    end)
