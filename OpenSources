@@ -1,5 +1,7 @@
 --https://www.roblox.com/games/11404011968/UPD1-Anime-Universe-Simulator?privateServerLinkCode=33500528702287870691632912415802
 
+
+
 repeat wait() until game:IsLoaded()
  
 local vu = game:GetService("VirtualUser")
@@ -31,18 +33,18 @@ getgenv().AutoSaveSettings = {
     SuperLucks = false,
 }
 
-local HttpService = game:GetService("HttpService")
-local FileName = "AutoSaveFeatures-AUS1" .. game.Players.LocalPlayer.Name..".txt"
+--local HttpService = game:GetService("HttpService")
+--local FileName = "AutoSaveFeatures-AUS1" .. game.Players.LocalPlayer.Name..".txt"
 
-if isfile(FileName) then
-    getgenv().AutoSaveSettings = HttpService:JSONDecode(readfile(FileName))
-end
+--if isfile(FileName) then
+  --  getgenv().AutoSaveSettings = HttpService:JSONDecode(readfile(FileName))
+--end
 
-local function SaveSettings()
-    local JSON = HttpService:JSONEncode(getgenv().AutoSaveSettings)
+--local function SaveSettings()
+   -- local JSON = HttpService:JSONEncode(getgenv().AutoSaveSettings)
 
-    writefile(FileName, JSON)
-end
+   -- writefile(FileName, JSON)
+--end
 
 
 local thumbsDownEmoji = utf8.char(0x1F44E)
@@ -1335,8 +1337,8 @@ local Toggle = Section:Toggle({
             end end
     end,
 })
-spawn(function()
-    while task.wait(1) do -- Saving it around every 1 second is good
-        SaveSettings()
-    end
-    end)
+--spawn(function()
+   -- while task.wait(1) do -- Saving it around every 1 second is good
+     --   SaveSettings()
+   -- end
+    -- end)
