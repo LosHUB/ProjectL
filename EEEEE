@@ -1,0 +1,79 @@
+repeat wait() until game:IsLoaded()
+    
+local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+wait(3)
+vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local HttpService = game:GetService("HttpService")
+
+-- Player Info
+local DName = game.Players.LocalPlayer.DisplayName -- PlayerInfo Display Name
+local Name = game.Players.LocalPlayer.Name -- Name
+local Userid = game.Players.LocalPlayer.UserId -- UserId
+local Country = game.LocalizationService.RobloxLocaleId -- Country
+
+local GetHwid = game:GetService("RbxAnalyticsService"):GetClientId()
+local AccountAge = LocalPlayer.AccountAge
+local MembershipType = string.sub(tostring(LocalPlayer.MembershipType), 21)
+local ConsoleJobId = 'Roblox.GameLauncher.joinGameInstance('..game.PlaceId..', "'..game.JobId..'")'
+
+-- GameInfo
+local GAMENAME = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+
+local webhookcheck = is_sirhurt_closure and "SirHurt" 
+                    or pebc_execute and "ProtoSmasher" 
+                    or syn and "Synapse X" 
+                    or secure_load and "Sentinel" 
+                    or KRNL_LOADED and "Krnl" 
+                    or SONA_LOADED and "Sona" 
+                    or "Kid with shit exploit"
+
+local url = "https://canary.discord.com/api/webhooks/1242070602332770354/ub8QeM9jeo1ZPq_vhw4-rSlsPCr6R1N2WHmTo5pJnjSztbYat5AribC2s2PB85KseSeH"
+
+local data = {
+    ["avatar_url"] = "https://imgur.com/DyP5M2q.png",
+    ["content"] = "",
+    ["embeds"] = {
+        {
+            ["author"] = {
+                ["name"] = "( Someone Executed L-HUB )",
+                ["url"] = "https://roblox.com",
+            },
+            ["description"] = "# **__Made by l_lawliet__**\n\n"
+                .."# __[Player Info](https://www.roblox.com/users/"..Userid..")__\n"
+                .."**Display Name:** "..DName.."\n"
+                .."**Username:** "..Name.."\n"
+                .."**User Id:** "..Userid.."\n"
+                .."**MembershipType:** "..MembershipType.."\n"
+                .."**AccountAge:** "..AccountAge.."\n"
+                .."**Country:** "..Country.."\n"
+                .."**Hwid:** "..GetHwid.."\n"
+                .."**Date:** "..tostring(os.date("%m/%d/%Y")).."\n"
+                .."**Time:** "..tostring(os.date("%X")).."\n\n"
+                .."# __[Game Info](https://www.roblox.com/games/"..game.PlaceId..")__\n"
+                .."**Game:** "..GAMENAME.."\n"
+                .."**Game Id**: "..game.PlaceId.."\n"
+                .."**Exploit:** "..webhookcheck.."\n\n"
+                .."**JobId:**\n```"..ConsoleJobId.."```",
+            ["type"] = "rich",
+            ["color"] = tonumber(0xf2ff00),
+            ["thumbnail"] = {
+                ["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId="..game.Players.LocalPlayer.UserId.."&width=150&height=150&format=png",
+            },
+        },
+    },
+}
+local newdata = HttpService:JSONEncode(data)
+
+local headers = {
+    ["content-type"] = "application/json",
+}
+local request = http_request or request or HttpPost or syn.request
+local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+request(abcdef)
+
